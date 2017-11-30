@@ -34,7 +34,7 @@ void CurrentSourceOn(void) {
         CTMUICONbits.IRNG = 3;              // Set to 55 uA
         CTMUICONbits.ITRIM = 0b001110;     // Nominal current set by IRNG prev(000110)
     } 
-   // small_current = 1;
+    //small_current = 1;
     // Turn current source on
     CTMUCONbits.IDISSEN = 0;            // Don't ground output of current source
     CTMUCONbits.EDG2STAT = 0;
@@ -68,7 +68,7 @@ float findCapacitance(unsigned long int TMR) {
     else {
         divisor = 0.1454545;
         capacitance = (TMR/divisor)-58;
-        capacitance /= 1000;
+        capacitance /= 1000000;
         if(capacitance > 1000) {         // milli range
             capacitance /= 1000;
             units[0] = 'm';
@@ -80,6 +80,7 @@ float findCapacitance(unsigned long int TMR) {
             units[1] = 'F';
             units[2] = '\0';
         }
+        small_current = 1;
     }
-   return capacitance;
+   return (capacitance >= 0) ? capacitance : 0;
 }

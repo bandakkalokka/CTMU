@@ -28,7 +28,6 @@ void __attribute__((interrupt, no_auto_psv))_CompInterrupt(void)
     unsigned long int temp3, temp2;
     temp3 = (unsigned long int)TMR3;
     temp2 = (unsigned long int)TMR2;
-    //DispString("Trig Comp");
     Time = (unsigned long int)(temp3 << 16) | temp2;
     T2CONbits.TON = 0;             // Turn off timer
     T3CONbits.TON = 0;

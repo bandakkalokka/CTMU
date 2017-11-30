@@ -81,7 +81,6 @@ unsigned int i;
 /*
  * 
  */
-
         
 int main(void) {
     
@@ -101,8 +100,9 @@ int main(void) {
     TRISAbits.TRISA3 = 1;          //Set AN11 as input
     TRISBbits.TRISB13 = 1;         //Set as input for capacitor
     
-    small_current = 0;
-    restart = 0;                   // Default small current
+    small_current = 1;
+    counter = 1;
+    restart = 0;
     
     InitTimer23();
     InitTimer1();
@@ -123,22 +123,19 @@ int main(void) {
         
         Idle();
         
-//        if(!restart) { 
+        if(!restart) {
             CurrentSourceOff();    //Turn off current source
             delay_ms(3000);
             capacitance = findCapacitance(Time);
             sprintf(str, "Capacitance: %f %s \n\r", capacitance, units);
             DispString(str);
-//            //DispString("Timer2/3: ");
-//            //DispHex32(Time);
-//            //DispString("\n\r");
-//            //Time = 0;
-//        }
-//        else {
-//            CurrentSourceOff();
-//            delay_ms(3000);
-//            restart = 0;
-//        }
+        }
+        else {
+            DispString("Big Capacitor!\n\r");
+            CurrentSourceOff();
+            delay_ms(3000);
+            restart = 0;
+        }
         
     }
     
