@@ -1,7 +1,9 @@
 #include <p24F16KA101.h>
 #include "SenseCapApp.h"
+#include "UART.h"
 
 volatile unsigned int small_current;
+volatile char units[3];
 
 void CTMUInit(void)
 {
@@ -30,9 +32,9 @@ void CurrentSourceOn(void) {
         CTMUICONbits.ITRIM = 0b111111;     // Nominal current set by IRNG prev(111101)
     }else{
         CTMUICONbits.IRNG = 3;              // Set to 55 uA
-        CTMUICONbits.ITRIM = 0b000110;     // Nominal current set by IRNG prev(000110)
+        CTMUICONbits.ITRIM = 0b001110;     // Nominal current set by IRNG prev(000110)
     } 
-
+   // small_current = 1;
     // Turn current source on
     CTMUCONbits.IDISSEN = 0;            // Don't ground output of current source
     CTMUCONbits.EDG2STAT = 0;
@@ -50,26 +52,34 @@ float findCapacitance(unsigned long int TMR) {
     
     if(small_current) {
         divisor = 1.45454545;
-        capacitance = (TMR/divisor)-57;
+        capacitance = (TMR/divisor)-58;
         if(capacitance > 1000) {        // nano range
             capacitance /= 1000;
-            //set unit to nF
+            units[0] = 'n';
+            units[1] = 'F';
+            units[2] = '\0';
         }
         else {
-            //set units to pF
+            units[0] = 'p';
+            units[1] = 'F';
+            units[2] = '\0';
         }
     }
     else {
         divisor = 0.1454545;
-        capacitance = (TMR/divisor)-57;
-        if(capacitance > 1000) {
+        capacitance = (TMR/divisor)-58;
+        capacitance /= 1000;
+        if(capacitance > 1000) {         // milli range
             capacitance /= 1000;
-            //set units to uF
+            units[0] = 'm';
+            units[1] = 'F';
+            units[2] = '\0';
         }
         else {
-            //set units to mF
+            units[0] = 'u';
+            units[1] = 'F';
+            units[2] = '\0';
         }
-        small_current = 1;
     }
    return capacitance;
 }

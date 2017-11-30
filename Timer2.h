@@ -21,7 +21,10 @@ extern "C" {
 
 #endif	/* TIMER2_H */
 
+extern volatile unsigned int restart;
 
-//void __attribute__((interrupt, no_auto_psv)) _T2Interrupt(void);
+extern volatile unsigned int counter;
+
+void __attribute__((interrupt, no_auto_psv)) _T3Interrupt(void);
 
 void InitTimer23(void);

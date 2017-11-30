@@ -1,6 +1,7 @@
 #include <p24F16KA101.h>
 #include "Comparator.h"
 #include "UART.h"
+#include "Timer2.h"
 
 volatile unsigned long int Time;
 void ComparatorInit(void)
@@ -27,18 +28,13 @@ void __attribute__((interrupt, no_auto_psv))_CompInterrupt(void)
     unsigned long int temp3, temp2;
     temp3 = (unsigned long int)TMR3;
     temp2 = (unsigned long int)TMR2;
-    //DispString("\n\r temp:");
-    //DispHex(temp3);
-    //DispHex(temp2);
+    //DispString("Trig Comp");
     Time = (unsigned long int)(temp3 << 16) | temp2;
     T2CONbits.TON = 0;             // Turn off timer
     T3CONbits.TON = 0;
     TMR3HLD = 0;
     TMR2 = 0;
-    //DispString("\n\r TMR:");
-    //DispHex(TMR3);
-    //DispHex(TMR2);
-
+    counter = 0;
     IFS1bits.CMIF = 0;
     CM2CONbits.CEVT= 0; 
     Nop();

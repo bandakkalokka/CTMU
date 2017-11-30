@@ -4,6 +4,11 @@
 #include "Timer2.h"
 #include "ChangeClk.h"
 #include "SenseCapApp.h"
+#include "UART.h"
+
+
+volatile unsigned int restart;
+volatile unsigned int counter;
 
 void InitTimer23(void) {
     T2CONbits.T32 = 0b1;                //Set to use both TImer2 and Timer3 (32-bit)
@@ -18,10 +23,16 @@ void InitTimer23(void) {
 //Timer1 Interrupt subroutine
 void __attribute__((interrupt, no_auto_psv)) _T3Interrupt(void)
 {
+    T2CONbits.TON = 0;
+    TMR3 = counter*11;
+    counter++;
+    //DispString("Trig");
+    //CTMUCONbits.EDG2STAT = 1; //turn off current source
+    //TMR3HLD = 0;
+    TMR2 = 0;
+    restart = 1;
     small_current = 0;
     IFS0bits.T3IF = 0b0;                //Clear Flag status
-    TMR3HLD = 0;
-    TMR2 = 0;
     Nop();
 }
 

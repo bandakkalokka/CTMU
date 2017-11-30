@@ -13,6 +13,7 @@ extern "C" {
 #endif
 
     extern volatile unsigned int small_current;
+    extern volatile char units[3];
 
 #ifdef	__cplusplus
 }
