@@ -132,8 +132,12 @@ int main(void) {
         if(CompFlag) {
             CompFlag = 0;
             capacitance = findCapacitance(Time);
-            sprintf(str, "Capacitance: %f %s\n\r", capacitance, units);
-            DispString(str);
+            if(units[0] != 'p') {
+                DispString("Fat Finger detected!!!\n\r");
+            }
+            else {
+                DispString("No finger detected!\n\r");
+            }
             small_current = 1;
         }
     }
