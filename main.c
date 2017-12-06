@@ -102,6 +102,7 @@ int main(void) {
     TRISBbits.TRISB13 = 1;         //Set as input for capacitor
     
     small_current = 1;
+    CompFlag = 0;
     
     InitTimer23();
     InitTimer1();
@@ -111,7 +112,9 @@ int main(void) {
     
     DispString("Discharging Capacitor!\n\r");
     CTMUCONbits.IDISSEN = 1;
-    delay_ms(1000);
+    delay_ms(3000);
+    delay_ms(3000);
+    delay_ms(2000);
 
     DispString("Ready to go!\n\r");
     
@@ -121,16 +124,18 @@ int main(void) {
         CurrentSourceOn();      //Turn on current source
         
         Idle();
-         
+        
         CurrentSourceOff();    //Turn off current source
         delay_ms(3000);
-        capacitance = findCapacitance(Time);
-        sprintf(str, "Capacitance: %f \n\r", capacitance);
-        DispString(str);
-        //DispString("Timer2/3: ");
-        //DispHex32(Time);
-        //DispString("\n\r");
-        //Time = 0;
+        delay_ms(3000);
+        delay_ms(2000);
+        if(CompFlag) {
+            CompFlag = 0;
+            capacitance = findCapacitance(Time);
+            sprintf(str, "Capacitance: %f %s\n\r", capacitance, units);
+            DispString(str);
+            small_current = 1;
+        }
     }
     
     return 0;

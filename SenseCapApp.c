@@ -1,7 +1,10 @@
 #include <p24F16KA101.h>
 #include "SenseCapApp.h"
+#include "UART.h"
+#include "Comparator.h"
 
 volatile unsigned int small_current;
+volatile char units[3];
 
 void CTMUInit(void)
 {
@@ -35,7 +38,8 @@ void CurrentSourceOn(void) {
 
     // Turn current source on
     CTMUCONbits.IDISSEN = 0;            // Don't ground output of current source
-    CTMUCONbits.EDG2STAT = 0;
+    CTMUCONbits.EDG2STAT = 0;           // Turn on current source
+    
 }
 
 
@@ -45,31 +49,41 @@ void CurrentSourceOff(void) {
 }
 
 float findCapacitance(unsigned long int TMR) {
+    Time = 0;
     float divisor = 0;
     float capacitance = 0;
+
     
     if(small_current) {
         divisor = 1.45454545;
-        capacitance = (TMR/divisor)-57;
+        capacitance = (TMR/divisor)-61;
         if(capacitance > 1000) {        // nano range
             capacitance /= 1000;
-            //set unit to nF
+            units[0] = 'n';
+            units[1] = 'F';
+            units[2] = '\0';
         }
         else {
-            //set units to pF
+            units[0] = 'p';
+            units[1] = 'F';
+            units[2] = '\0';
         }
     }
     else {
         divisor = 0.1454545;
         capacitance = (TMR/divisor)-57;
+        capacitance /= 1000000;
         if(capacitance > 1000) {
             capacitance /= 1000;
-            //set units to uF
+            units[0] = 'm';
+            units[1] = 'F';
+            units[2] = '\0';
         }
         else {
-            //set units to mF
+            units[0] = 'u';
+            units[1] = 'F';
+            units[2] = '\0';
         }
-        small_current = 1;
     }
-   return capacitance;
+   return (capacitance <= 0) ? 0 : capacitance;
 }

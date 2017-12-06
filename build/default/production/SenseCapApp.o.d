@@ -1,3 +1,5 @@
 build/default/production/SenseCapApp.o:  \
 SenseCapApp.c  \
-SenseCapApp.h 
+SenseCapApp.h  \
+ UART.h  \
+Comparator.h 

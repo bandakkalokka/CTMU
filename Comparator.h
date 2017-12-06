@@ -19,6 +19,7 @@ extern "C" {
 
 
 extern volatile unsigned long int Time;
+extern volatile unsigned int CompFlag;
 
 void ComparatorInit(void);
 

@@ -12,13 +12,15 @@
 extern "C" {
 #endif
 
-    extern volatile unsigned int small_current;
 
 #ifdef	__cplusplus
 }
 #endif
 
 #define VREF 2.0
+
+extern volatile unsigned int small_current;
+extern volatile char units[3];
 
 void CTMUInit(void);
 void CurrentSourceOn(void);
